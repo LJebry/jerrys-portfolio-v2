@@ -11,13 +11,10 @@
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
     "@fontsource/oswald": "^5.2.8",
-    "@remotion/player": "^4.0.454",
     "lucide-react": "^1.14.0",
     "next": "16.2.4",
     "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "react-medium-image-zoom": "^5.4.3",
-    "remotion": "^4.0.454"
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

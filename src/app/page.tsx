@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { FullStackMarker } from "@/components/portfolio/full-stack-marker";
-import { Component as ImageZoomCard } from "@/components/ui/image-zoom";
+import { FeaturedSpotlight } from "@/components/ui/feature-spotlight";
 
 export default function Home() {
   return (
@@ -18,33 +17,8 @@ export default function Home() {
           </p>
         </header>
 
-        <div className="grid flex-1 items-center gap-12 py-16 lg:grid-cols-[1fr_320px] lg:py-20">
-          <div className="max-w-4xl">
-            <p className="mb-5 font-display text-sm uppercase text-secondary">
-              My name is
-            </p>
-            <h1 className="font-display text-[clamp(4rem,14vw,9rem)] font-bold uppercase leading-[0.9] text-foreground">
-              Jerry
-              <span className="block text-accent">Robayo</span>
-            </h1>
-            <FullStackMarker />
-            <a
-              href="mailto:jerry@example.com"
-              className="mt-10 inline-flex min-h-12 items-center justify-center rounded-[2px] bg-accent px-5 font-display text-sm font-semibold uppercase text-foreground transition-colors hover:bg-[#a82626] focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-            >
-              Get in touch
-            </a>
-          </div>
-
-          <aside className="pt-8 lg:pt-0">
-            <ImageZoomCard />
-            <dl className="mx-auto mt-8 grid max-w-sm gap-5 text-sm">
-              <div>
-                <dt className="font-display uppercase text-secondary">Focus</dt>
-                <dd className="mt-2 text-foreground">Full stack web apps.</dd>
-              </div>
-            </dl>
-          </aside>
+        <div className="flex flex-1 items-center justify-center py-16 lg:py-20">
+          <FeaturedSpotlight />
         </div>
 
         <footer className="flex flex-col gap-3 border-t border-secondary/35 pt-5 text-sm text-secondary sm:flex-row sm:items-center sm:justify-between">
