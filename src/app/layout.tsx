@@ -1,21 +1,13 @@
 import type { Metadata } from "next";
-import { Oswald, Inter } from "next/font/google";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/oswald/600.css";
+import "@fontsource/oswald/700.css";
 import "./globals.css";
 
-const oswald = Oswald({
-  variable: "--font-oswald",
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "Portfolio V2",
-  description: "A high-performance portfolio with Cafe Racer design.",
+  title: "Jerry Robayo | Full Stack Developer",
+  description: "Portfolio landing page for Jerry Robayo, full stack developer.",
 };
 
 export default function RootLayout({
@@ -24,10 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${oswald.variable} ${inter.variable} h-full antialiased dark`}
-    >
+    <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
