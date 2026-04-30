@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useMemo, useRef, useState } from "react";
+import Toaster, { type ToasterRef } from "@/components/ui/toast";
 
 type LetterStatus = "empty" | "absent" | "present" | "correct";
 
@@ -55,6 +56,7 @@ function getCellClass(status: LetterStatus) {
 }
 
 export function WordleGame() {
+  const toasterRef = useRef<ToasterRef>(null);
   const [guess, setGuess] = useState("");
   const [rows, setRows] = useState<GuessRow[]>([]);
   const [message, setMessage] = useState(
@@ -65,6 +67,25 @@ export function WordleGame() {
     row.statuses.every((status) => status === "correct"),
   );
   const isComplete = hasWon || rows.length >= maxAttempts;
+
+  function notify({
+    title,
+    nextMessage,
+    variant = "default",
+  }: {
+    title: string;
+    nextMessage: string;
+    variant?: "default" | "success" | "error" | "warning";
+  }) {
+    setMessage(nextMessage);
+    toasterRef.current?.show({
+      title,
+      message: nextMessage,
+      variant,
+      position: "bottom-right",
+      duration: 3000,
+    });
+  }
 
   const boardRows = useMemo(() => {
     const committedRows = rows.map((row) => ({
@@ -104,7 +125,11 @@ export function WordleGame() {
 
     const normalizedGuess = guess.trim().toLowerCase();
     if (!/^[a-z]{5}$/.test(normalizedGuess)) {
-      setMessage("Enter exactly five letters.");
+      notify({
+        title: "Not enough letters",
+        nextMessage: "Enter exactly five letters.",
+        variant: "warning",
+      });
       return;
     }
 
@@ -122,7 +147,11 @@ export function WordleGame() {
       const result = (await response.json()) as ApiResponse;
 
       if (!response.ok || result.error) {
-        setMessage(result.error || "Could not check that guess.");
+        notify({
+          title: response.status === 400 ? "Invalid guess" : "Wordle error",
+          nextMessage: result.error || "Could not check that guess.",
+          variant: response.status === 400 ? "warning" : "error",
+        });
         return;
       }
 
@@ -137,14 +166,29 @@ export function WordleGame() {
       setGuess("");
 
       if (result.was_correct) {
-        setMessage("Nice. You solved today's word.");
+        notify({
+          title: "Solved",
+          nextMessage: "Nice. You solved today's word.",
+          variant: "success",
+        });
       } else if (nextRows.length >= maxAttempts) {
-        setMessage("Out of guesses. Come back tomorrow for a new word.");
+        notify({
+          title: "Game over",
+          nextMessage: "Out of guesses. Come back tomorrow for a new word.",
+          variant: "warning",
+        });
       } else {
-        setMessage(`${maxAttempts - nextRows.length} guesses left.`);
+        notify({
+          title: "Guess checked",
+          nextMessage: `${maxAttempts - nextRows.length} guesses left.`,
+        });
       }
     } catch {
-      setMessage("The Wordle service is not responding right now.");
+      notify({
+        title: "Service unavailable",
+        nextMessage: "The Wordle service is not responding right now.",
+        variant: "error",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -152,6 +196,8 @@ export function WordleGame() {
 
   return (
     <div className="border border-secondary/25 bg-surface p-4 sm:p-5">
+      <Toaster ref={toasterRef} defaultPosition="bottom-right" />
+
       <div className="mb-5 flex flex-col gap-2 border-b border-secondary/25 pb-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="font-display text-xs uppercase tracking-[0.24em] text-accent">

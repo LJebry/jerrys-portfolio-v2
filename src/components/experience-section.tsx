@@ -65,7 +65,7 @@ export function ExperienceSection() {
     <section id="experience" className="py-14 sm:py-16 lg:py-20">
       <div className="mb-10 flex items-center gap-4">
         <p className="font-display text-sm uppercase tracking-[0.28em] text-accent">
-          Timeline
+          03 / Timeline
         </p>
         <div className="h-px w-24 bg-secondary/25" />
       </div>

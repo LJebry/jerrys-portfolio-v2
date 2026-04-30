@@ -1,6 +1,12 @@
+import englishWords from "an-array-of-english-words/index.json";
+
 type WordleRequest = {
   guess?: unknown;
 };
+
+const validFiveLetterGuesses = new Set(
+  (englishWords as string[]).filter((word) => /^[a-z]{5}$/.test(word)),
+);
 
 export async function POST(request: Request) {
   let body: WordleRequest;
@@ -17,6 +23,13 @@ export async function POST(request: Request) {
   if (!/^[a-z]{5}$/.test(guess)) {
     return Response.json(
       { error: "Guess must be exactly five letters." },
+      { status: 400 },
+    );
+  }
+
+  if (!validFiveLetterGuesses.has(guess)) {
+    return Response.json(
+      { error: "That does not look like a valid word." },
       { status: 400 },
     );
   }

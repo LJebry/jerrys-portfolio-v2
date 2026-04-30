@@ -83,6 +83,7 @@ function StoryThumbnail({
   viewedIndices,
   onClick,
 }: StoryThumbnailProps) {
+  const roundCoord = (value: number) => Number(value.toFixed(4));
   const segmentCount = stories.length;
   const gapDegrees = segmentCount > 1 ? 12 : 0;
   const segmentDegrees = (360 - gapDegrees * segmentCount) / segmentCount;
@@ -108,33 +109,49 @@ function StoryThumbnail({
     >
       <div className="relative h-[72px] w-[72px]">
         <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100">
-          {stories.map((_, index) => {
-            const startAngle = -90 + index * (segmentDegrees + gapDegrees);
-            const endAngle = startAngle + segmentDegrees;
-            const isViewed = viewedIndices.has(index);
-            const startRad = (startAngle * Math.PI) / 180;
-            const endRad = (endAngle * Math.PI) / 180;
-            const radius = 46;
-            const x1 = 50 + radius * Math.cos(startRad);
-            const y1 = 50 + radius * Math.sin(startRad);
-            const x2 = 50 + radius * Math.cos(endRad);
-            const y2 = 50 + radius * Math.sin(endRad);
-            const largeArc = segmentDegrees > 180 ? 1 : 0;
+          {segmentCount === 1 ? (
+            <circle
+              cx="50"
+              cy="50"
+              r="46"
+              fill="none"
+              strokeWidth="5"
+              className={cn(
+                "transition-colors duration-300",
+                allViewed ? "stroke-secondary/35" : "stroke-accent",
+              )}
+            />
+          ) : (
+            stories.map((_, index) => {
+              const startAngle = -90 + index * (segmentDegrees + gapDegrees);
+              const endAngle = startAngle + segmentDegrees;
+              const isViewed = viewedIndices.has(index);
+              const startRad = (startAngle * Math.PI) / 180;
+              const endRad = (endAngle * Math.PI) / 180;
+              const radius = 46;
+              const x1 = roundCoord(50 + radius * Math.cos(startRad));
+              const y1 = roundCoord(50 + radius * Math.sin(startRad));
+              const x2 = roundCoord(50 + radius * Math.cos(endRad));
+              const y2 = roundCoord(50 + radius * Math.sin(endRad));
+              const largeArc = segmentDegrees > 180 ? 1 : 0;
 
-            return (
-              <path
-                key={index}
-                d={`M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2}`}
-                fill="none"
-                strokeWidth="5"
-                strokeLinecap="round"
-                className={cn(
-                  "transition-colors duration-300",
-                  isViewed || allViewed ? "stroke-secondary/35" : "stroke-accent",
-                )}
-              />
-            );
-          })}
+              return (
+                <path
+                  key={index}
+                  d={`M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2}`}
+                  fill="none"
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                  className={cn(
+                    "transition-colors duration-300",
+                    isViewed || allViewed
+                      ? "stroke-secondary/35"
+                      : "stroke-accent",
+                  )}
+                />
+              );
+            })
+          )}
         </svg>
 
         <div className="absolute inset-[5px] rounded-full bg-background p-[2px]">

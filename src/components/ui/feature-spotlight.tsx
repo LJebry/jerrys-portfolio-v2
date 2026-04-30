@@ -29,7 +29,7 @@ export function FeaturedSpotlight() {
               transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
-            Portfolio
+            01 / Portfolio
           </span>
         </div>
 
@@ -77,7 +77,7 @@ export function FeaturedSpotlight() {
         </div>
 
         <a
-          href="mailto:jerryrobayo1130@gmail.com"
+          href="/contact"
           className="mt-6 flex items-center gap-4 md:mt-8 lg:mt-10"
         >
           <div

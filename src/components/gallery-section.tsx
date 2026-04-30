@@ -10,9 +10,43 @@ const storyUsers: Array<{
   stories: Story[];
 }> = [
   {
+    username: "Wifey",
+    avatar: "/gallery/wifey-nyc-subway.jpeg",
+    timestamp: storyTimestamp,
+    stories: [
+      {
+        id: "wifey-1",
+        type: "image",
+        src: "/gallery/wifey-nyc-subway.jpeg",
+      },
+      {
+        id: "wifey-2",
+        type: "image",
+        src: "/gallery/wifey-nyc-upside-down.jpeg",
+      },
+    ],
+  },
+  {
+    username: "NYC",
+    avatar: "/gallery/wifey-nyc-theater.jpeg",
+    timestamp: "2026-04-29T19:30:00-04:00",
+    stories: [
+      {
+        id: "nyc-1",
+        type: "image",
+        src: "/gallery/wifey-nyc-theater.jpeg",
+      },
+      {
+        id: "nyc-2",
+        type: "image",
+        src: "/gallery/portrait-stage.jpeg",
+      },
+    ],
+  },
+  {
     username: "Portraits",
     avatar: "/jerry-robayo-portrait-1821.jpeg",
-    timestamp: storyTimestamp,
+    timestamp: "2026-04-29T18:15:00-04:00",
     stories: [
       {
         id: "portrait-1",
@@ -22,61 +56,19 @@ const storyUsers: Array<{
       {
         id: "portrait-2",
         type: "image",
-        src: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&h=1400&fit=crop",
+        src: "/gallery/portrait-stage.jpeg",
       },
     ],
   },
   {
-    username: "Workspace",
-    avatar:
-      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=300&h=300&fit=crop",
-    timestamp: "2026-04-29T18:15:00-04:00",
-    stories: [
-      {
-        id: "workspace-1",
-        type: "image",
-        src: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&h=1400&fit=crop",
-      },
-      {
-        id: "workspace-2",
-        type: "image",
-        src: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=900&h=1400&fit=crop",
-      },
-    ],
-  },
-  {
-    username: "City",
-    avatar:
-      "https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=300&h=300&fit=crop",
+    username: "My Cats",
+    avatar: "/gallery/my-cats.jpeg",
     timestamp: "2026-04-29T14:00:00-04:00",
     stories: [
       {
-        id: "city-1",
+        id: "cats-1",
         type: "image",
-        src: "https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=900&h=1400&fit=crop",
-      },
-      {
-        id: "city-2",
-        type: "image",
-        src: "https://images.unsplash.com/photo-1496588152823-86ff7695e68f?w=900&h=1400&fit=crop",
-      },
-    ],
-  },
-  {
-    username: "Builds",
-    avatar:
-      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=300&h=300&fit=crop",
-    timestamp: "2026-04-28T21:00:00-04:00",
-    stories: [
-      {
-        id: "builds-1",
-        type: "image",
-        src: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=900&h=1400&fit=crop",
-      },
-      {
-        id: "builds-2",
-        type: "image",
-        src: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=900&h=1400&fit=crop",
+        src: "/gallery/my-cats.jpeg",
       },
     ],
   },
@@ -86,7 +78,7 @@ const mediaItems = [
   {
     id: 1,
     type: "image" as const,
-    title: "Portrait Session",
+    title: "Portfolio Portrait",
     desc: "A quiet frame from the portfolio shoot.",
     url: "/jerry-robayo-portrait-1821.jpeg",
     span: "",
@@ -94,25 +86,41 @@ const mediaItems = [
   {
     id: 2,
     type: "image" as const,
-    title: "Desk Mode",
-    desc: "Where interface work gets shaped.",
-    url: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&h=900&fit=crop",
+    title: "Wifey",
+    desc: "Subway ride, soft light, and a favorite person.",
+    url: "/gallery/wifey-nyc-subway.jpeg",
     span: "",
   },
   {
     id: 3,
     type: "image" as const,
-    title: "New York",
-    desc: "City rhythm, late trains, sharp deadlines.",
-    url: "https://images.unsplash.com/photo-1496588152823-86ff7695e68f?w=900&h=1200&fit=crop",
+    title: "Tiny Dino",
+    desc: "A weird little NYC moment that deserved a frame.",
+    url: "/gallery/wifey-nyc-theater.jpeg",
     span: "",
   },
   {
     id: 4,
     type: "image" as const,
-    title: "Code Review",
-    desc: "Small decisions that keep products maintainable.",
-    url: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=1200&h=900&fit=crop",
+    title: "Portraits",
+    desc: "Backstage light and a good laugh.",
+    url: "/gallery/portrait-stage.jpeg",
+    span: "",
+  },
+  {
+    id: 5,
+    type: "image" as const,
+    title: "My Cats",
+    desc: "Two tiny personalities holding court.",
+    url: "/gallery/my-cats.jpeg",
+    span: "",
+  },
+  {
+    id: 6,
+    type: "image" as const,
+    title: "Wifey",
+    desc: "An upside-down frame from the everyday archive.",
+    url: "/gallery/wifey-nyc-upside-down.jpeg",
     span: "",
   },
 ];
@@ -122,7 +130,7 @@ export function GallerySection() {
     <section id="gallery" className="py-14 sm:py-16 lg:py-20">
       <div className="mb-10 flex items-center gap-4">
         <p className="font-display text-sm uppercase tracking-[0.28em] text-accent">
-          Visual Log
+          05 / Visual Log
         </p>
         <div className="h-px w-24 bg-secondary/25" />
       </div>
@@ -134,8 +142,8 @@ export function GallerySection() {
             <span className="block text-accent">Shots.</span>
           </h1>
           <p className="mt-8 max-w-xl text-xl leading-9 text-secondary sm:text-2xl sm:leading-10">
-            A visual shelf for portraits, workspaces, city notes, and the small
-            details around the portfolio.
+            A visual shelf for portraits, Wifey, NYC moments, my cats, and the
+            small details around the portfolio.
           </p>
         </div>
 

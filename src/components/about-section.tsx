@@ -25,7 +25,7 @@ export function AboutSection() {
         <div className="min-w-0">
           <div className="mb-9 flex items-center gap-4">
             <p className="font-display text-sm uppercase tracking-[0.28em] text-accent">
-              Dossier
+              02 / Dossier
             </p>
             <div className="h-px w-24 bg-secondary/25" />
           </div>
