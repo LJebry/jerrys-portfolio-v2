@@ -3,7 +3,7 @@ const menuItems = [
   { label: "About Me", href: "/about-me" },
   { label: "Experience", href: "/experience" },
   { label: "Projects", href: "/projects" },
-  { label: "Gallery", href: "#gallery" },
+  { label: "Gallery", href: "/gallery" },
   { label: "Contact", href: "mailto:jerryrobayo1130@gmail.com" },
   { label: "Fun", href: "#fun" },
 ];

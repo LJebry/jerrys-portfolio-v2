@@ -1,4 +1,5 @@
 import { ArrowDownToLine, ArrowUpRight } from "lucide-react";
+import { GraduationCountdown } from "@/components/graduation-countdown";
 
 const profile = [
   ["Role", "Software engineer, CS student"],
@@ -83,6 +84,17 @@ export function AboutSection() {
                   <dd className="text-base text-foreground">{value}</dd>
                 </div>
               ))}
+              <div className="grid grid-cols-[92px_1fr] gap-4">
+                <dt className="font-display text-xs uppercase tracking-[0.22em] text-secondary/70">
+                  Graduation
+                </dt>
+                <dd>
+                  <GraduationCountdown />
+                  <p className="mt-2 text-center text-xs text-secondary">
+                    May 28, 2026 at 9:00 AM
+                  </p>
+                </dd>
+              </div>
             </dl>
 
             <div
