@@ -77,7 +77,7 @@ export function FeaturedSpotlight() {
         </div>
 
         <a
-          href="mailto:jerry@example.com"
+          href="mailto:jerryrobayo1130@gmail.com"
           className="mt-6 flex items-center gap-4 md:mt-8 lg:mt-10"
         >
           <div
