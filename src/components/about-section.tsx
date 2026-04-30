@@ -36,9 +36,7 @@ export function AboutSection() {
           </h1>
 
           <p className="mt-8 max-w-4xl text-2xl leading-10 text-foreground sm:text-3xl sm:leading-[1.45]">
-            Brooklyn College computer science senior building full-stack web
-            apps with polished interfaces, reliable APIs, and product-ready
-            delivery.
+            I am a senior Computer Science student at Brooklyn College focused on building full stack web applications that are clean, reliable, and ready for real users.
           </p>
 
           <div className="mt-10 border border-secondary/25 bg-surface/45 p-5">
@@ -49,25 +47,18 @@ export function AboutSection() {
               </p>
             </div>
             <p className="text-base leading-7 text-secondary sm:text-lg sm:leading-8">
-              Finishing my final semester, looking for 2026 new-grad Full Stack
-              Developer roles, and sharpening the kind of work that connects
-              frontend detail with backend reliability.
+              I’m currently finishing my final semester and looking for a 2026 new grad software engineering role where I can continue building and learning on a team that ships real products.
             </p>
           </div>
 
           <div className="mt-12 grid gap-8 text-base leading-8 text-secondary sm:text-lg sm:leading-9">
             <p>
-              I&apos;m Jerry Robayo, a first-generation Hispanic student from
-              Ecuador and a citizen of the United States. That background shapes
-              how I work: steady, resourceful, and focused on making software
-              that is useful beyond the demo.
+              I’ve worked across the stack in both internship and production environments. At Sports Excitement, I built frontend features with Next.js and Tailwind while also handling API integration, authentication flows, and state management using tools like Axios, Zustand, and Zod. I’ve also spent time maintaining and improving existing systems by debugging issues, adding features, and making sure things work as expected in real environments.
+              What I enjoy most is working at the point where frontend and backend meet, where UI decisions directly affect data flow, performance, and user experience. That is where the real engineering tradeoffs happen.
             </p>
 
             <p id="experience">
-              My experience spans responsive product interfaces, authenticated
-              app flows, reusable component systems, API clients, and database
-              backed features. I like moving between the browser and the server
-              because that is where product decisions become real.
+              Outside of work, I like building projects that push me technically. Recently, I built a real time translation app that combines speech to text, language models, and voice synthesis into a single pipeline.
             </p>
           </div>
 
@@ -90,7 +81,7 @@ export function AboutSection() {
                 </dt>
                 <dd>
                   <GraduationCountdown />
-                  <p className="mt-2 text-center text-xs text-secondary">
+                  <p className="mx-auto mt-2 max-w-[280px] text-center text-xs text-secondary">
                     May 28, 2026 at 9:00 AM
                   </p>
                 </dd>

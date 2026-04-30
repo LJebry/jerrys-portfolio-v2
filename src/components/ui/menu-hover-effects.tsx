@@ -5,7 +5,7 @@ const menuItems = [
   { label: "Projects", href: "/projects" },
   { label: "Gallery", href: "/gallery" },
   { label: "Contact", href: "/contact" },
-  { label: "Fun", href: "#fun" },
+  { label: "Fun", href: "/fun" },
 ];
 
 export default function NavMenu() {
