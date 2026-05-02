@@ -1,4 +1,4 @@
-import InteractiveBentoGallery from "@/components/ui/interactive-bento-gallery";
+import FlipGallery from "@/components/ui/flip-gallery";
 import { StoryViewer, type Story } from "@/components/ui/story-viewer";
 
 const storyTimestamp = "2026-04-29T20:30:00-04:00";
@@ -109,118 +109,62 @@ const storyUsers: Array<{
   },
 ];
 
-const mediaItems = [
+const flipGalleryImages = [
   {
-    id: 1,
-    type: "image" as const,
     title: "Portfolio Portrait",
-    desc: "A quiet frame from the portfolio shoot.",
     url: "/jerry-robayo-portrait-1821.jpeg",
-    span: "",
   },
   {
-    id: 2,
-    type: "image" as const,
     title: "Wifey",
-    desc: "Goofing around :D",
     url: "/gallery/wifey-nyc-subway.jpeg",
-    span: "",
   },
   {
-    id: 3,
-    type: "image" as const,
     title: "Wifey",
-    desc: "Movies Shenanigans",
     url: "/gallery/wifey-nyc-upside-down.jpeg",
-    span: "",
   },
   {
-    id: 4,
-    type: "image" as const,
     title: "Wifey",
-    desc: "Also goofing around :D",
     url: "/gallery/portrait-stage.jpeg",
-    span: "",
   },
   {
-    id: 5,
-    type: "image" as const,
     title: "NYC Snowflake",
-    desc: "Holiday light caught between city facades.",
     url: "/gallery/nyc-snowflake.jpeg",
-    span: "",
   },
   {
-    id: 6,
-    type: "image" as const,
     title: "Grand Central",
-    desc: "A station frame from a New York walk.",
     url: "/gallery/nyc-grand-central.jpeg",
-    span: "",
   },
   {
-    id: 7,
-    type: "image" as const,
-    title: "Staten Island Ferry View",
-    desc: "Golden hour over the water.",
+    title: "Ferry View",
     url: "/gallery/nyc-skyline.jpeg",
-    span: "",
   },
   {
-    id: 8,
-    type: "image" as const,
     title: "Met Museum",
-    desc: "Took this one for an art assignment",
     url: "/gallery/nyc-museum.jpeg",
-    span: "",
   },
   {
-    id: 9,
-    type: "image" as const,
     title: "Tiny Dino",
-    desc: "Burnt an año viejo. A New Year’s tradition where you burn an effigy to leave the old year behind. This one was a tiny dinosaur.",
     url: "/gallery/wifey-nyc-theater.jpeg",
-    span: "",
   },
   {
-    id: 10,
-    type: "image" as const,
     title: "My Cats",
-    desc: "They dont seem to like eachother much but they sure are cute.",
     url: "/gallery/my-cats.jpeg",
-    span: "",
   },
   {
-    id: 11,
-    type: "image" as const,
-    title: "",
-    desc: "",
+    title: "Wifey",
     url: "/gallery/wifey-close-1.jpeg",
-    span: "",
   },
   {
-    id: 12,
-    type: "image" as const,
-    title: "",
-    desc: "",
+    title: "Wifey",
     url: "/gallery/wifey-close-2.jpeg",
-    span: "",
   },
   {
-    id: 13,
-    type: "image" as const,
-    title: "",
-    desc: "",
+    title: "Wifey",
     url: "/gallery/wifey-close-3.jpeg",
-    span: "",
   },
   {
-    id: 14,
-    type: "image" as const,
-    title: "",
-    desc: "",
+    title: "Wifey",
     url: "/gallery/wifey-close-4.jpeg",
-    span: "",
   },
 ];
 
@@ -265,11 +209,15 @@ export function GallerySection() {
           </div>
 
           <div className="mt-10">
-            <InteractiveBentoGallery
-              mediaItems={mediaItems}
-              title="Bento Gallery"
-              description="Open a shot and use the dock to jump between frames."
-            />
+            <div className="mb-5">
+              <h2 className="font-display text-sm uppercase tracking-[0.24em] text-foreground">
+                Flip Gallery
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-secondary">
+                Use the arrows to flip through the visual log.
+              </p>
+            </div>
+            <FlipGallery images={flipGalleryImages} />
           </div>
         </div>
       </div>

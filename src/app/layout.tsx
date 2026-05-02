@@ -7,7 +7,7 @@ import { InitialLoader } from "@/components/initial-loader";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Jerry Robayo",
+  title: "Jerry's Portfolio",
   description: "Portfolio landing page for Jerry Robayo, full stack developer.",
   icons: {
     icon: "/icon.svg",

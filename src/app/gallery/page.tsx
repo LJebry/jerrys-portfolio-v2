@@ -11,7 +11,7 @@ export default function GalleryPage() {
 
         <footer className="flex flex-col gap-3 border-t border-secondary/35 pt-5 text-sm text-secondary sm:flex-row sm:items-center sm:justify-between">
           <p>Visual notes by Jerry Robayo</p>
-          <p>Stories + bento gallery</p>
+          <p>Stories + rotating gallery</p>
         </footer>
       </section>
     </main>
