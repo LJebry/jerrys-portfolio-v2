@@ -154,7 +154,7 @@ function ProjectCard({ project }: { project: Project }) {
       initial="hidden"
       animate="visible"
       whileHover="hover"
-      className="cursor-pointer border-b border-secondary/25 py-5"
+      className="cursor-pointer py-5"
       onClick={() => setIsExpanded(!isExpanded)}
     >
       <div className="flex items-start justify-between">
@@ -306,6 +306,9 @@ export function ProjectCards({ projects }: ProjectCardsProps) {
             key={project.id}
             initial={{ opacity: 0, y: 30, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
+            className={
+              index === projects.length - 1 ? "" : "border-b border-secondary/25"
+            }
             transition={{
               type: "spring",
               stiffness: 300,
