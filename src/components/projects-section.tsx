@@ -93,7 +93,7 @@ export function ProjectsSection() {
             <span className="block text-accent">Built.</span>
           </h1>
           <p className="mt-8 max-w-xl text-xl leading-9 text-secondary sm:text-2xl sm:leading-10">
-            A working archive of web apps, systems practice, and case studies.
+            A working archive of some of my projects.
             I&apos;ll keep replacing these with deeper project pages as the
             portfolio fills out.
           </p>

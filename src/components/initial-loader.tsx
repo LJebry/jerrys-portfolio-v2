@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { GooeyLoader } from "@/components/ui/loader-10";
+import SqueezeLoader from "@/components/ui/loading-indicator";
 
 const STORAGE_KEY = "jr-portfolio-loader-seen";
 const LOADER_DURATION_MS = 3000;
@@ -28,17 +28,8 @@ export function InitialLoader({ children }: { children: React.ReactNode }) {
     <>
       {children}
       {isLoading && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background text-foreground">
-          <div className="flex flex-col items-center gap-6">
-            <GooeyLoader
-              primaryColor="#c42e2e"
-              secondaryColor="#e8e4db"
-              borderColor="#9b968c"
-            />
-            <p className="font-display text-xs uppercase tracking-[0.28em] text-secondary">
-              Loading Portfolio
-            </p>
-          </div>
+        <div className="fixed inset-0 z-[100] bg-background text-foreground">
+          <SqueezeLoader size={72} color1="#e8e4db" color2="#c42e2e" />
         </div>
       )}
     </>

@@ -1,13 +1,9 @@
-import { GooeyLoader } from "@/components/ui/loader-10";
+import SqueezeLoader from "@/components/ui/loading-indicator";
 
 export default function Loading() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background">
-      <GooeyLoader
-        primaryColor="#c42e2e"
-        secondaryColor="#e8e4db"
-        borderColor="#9b968c"
-      />
+    <main className="min-h-screen bg-background">
+      <SqueezeLoader size={72} color1="#e8e4db" color2="#c42e2e" />
     </main>
   );
 }
