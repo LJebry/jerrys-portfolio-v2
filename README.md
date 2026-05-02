@@ -2,6 +2,8 @@
 
 A dark, editorial portfolio template built with Next.js, TypeScript, and Tailwind CSS. This site was designed for my own developer portfolio, but the structure is reusable if you want a polished starting point for a personal site.
 
+[![Buy me a coffee](https://img.shields.io/badge/Help%20a%20broke%20college%20student%20out-FF5F5F?style=for-the-badge&logo=buymeacoffee&logoColor=white)](https://www.buymeacoffee.com/jerry.robayo)
+
 ![Jerry's Portfolio V2 homepage](./public/homepage-screenshot.png)
 
 ## About
