@@ -27,6 +27,12 @@ The design leans into a minimal black-and-red visual system with large condensed
 
 ## Tech Stack
 
+<p align="center">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=nextjs,react,ts,js,tailwind,nodejs,express,prisma,postgres,git,github,vercel,vscode&theme=dark&perline=7" alt="Tech stack icons for Next.js, React, TypeScript, JavaScript, Tailwind CSS, Node.js, Express, Prisma, PostgreSQL, Git, GitHub, Vercel, and VS Code" />
+  </a>
+</p>
+
 - Next.js
 - React
 - TypeScript
