@@ -134,9 +134,9 @@ export function ProjectsSection() {
                         rel={isInternal ? undefined : "noreferrer"}
                         aria-label={`${project.title} ${link.label}`}
                         title={link.label}
-                        className="inline-flex h-11 w-11 items-center justify-center border border-secondary/35 text-foreground transition-colors hover:border-accent hover:bg-accent"
+                        className="inline-flex size-11 items-center justify-center border border-secondary/35 text-foreground transition-colors hover:border-accent hover:bg-accent"
                       >
-                        <Icon className="h-5 w-5" />
+                        <Icon className="size-5" />
                       </a>
                     );
                   })}

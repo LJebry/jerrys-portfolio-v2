@@ -14,7 +14,7 @@ export function ContactSection() {
 
       <ContactCard
         title="Get In Touch"
-        description="Have a role, project, collaboration, or question? Send a message and your email app will open with everything ready to send."
+        description="Have a role, project, collaboration, or question? Send a message and it will land directly in my inbox."
         contactInfo={[
           {
             icon: MailIcon,

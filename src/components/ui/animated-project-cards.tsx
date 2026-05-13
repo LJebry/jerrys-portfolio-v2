@@ -1,6 +1,12 @@
 "use client";
 
-import { AnimatePresence, motion, type Variants } from "framer-motion";
+import {
+  AnimatePresence,
+  LazyMotion,
+  domAnimation,
+  m,
+  type Variants,
+} from "framer-motion";
 import { ChevronDown, MapPin } from "lucide-react";
 import { useState } from "react";
 
@@ -149,7 +155,7 @@ function ProjectCard({ project }: { project: Project }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <motion.div
+    <m.div
       variants={cardVariants}
       initial="hidden"
       animate="visible"
@@ -159,16 +165,16 @@ function ProjectCard({ project }: { project: Project }) {
     >
       <div className="flex items-start justify-between">
         <div className="flex flex-1 items-start gap-4">
-          <motion.div
+          <m.div
             variants={logoVariants}
             whileHover="hover"
-            className={`flex h-12 w-12 shrink-0 items-center justify-center border border-secondary/25 ${project.logoColor} font-display text-lg font-semibold text-foreground shadow-sm`}
+            className={`flex size-12 shrink-0 items-center justify-center border border-secondary/25 ${project.logoColor} font-display text-lg font-semibold text-foreground shadow-sm`}
           >
             {project.logoIcon}
-          </motion.div>
+          </m.div>
 
           <div className="min-w-0 flex-1">
-            <motion.div
+            <m.div
               className="mb-2 flex flex-wrap items-center gap-3"
               variants={childVariants}
             >
@@ -176,7 +182,7 @@ function ProjectCard({ project }: { project: Project }) {
                 {project.title}
               </h3>
               <div className="h-3 w-px bg-secondary/45" />
-              <motion.span
+              <m.span
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
                 className={`px-2 py-1 font-display text-xs uppercase tracking-[0.14em] ${
@@ -186,31 +192,31 @@ function ProjectCard({ project }: { project: Project }) {
                 }`}
               >
                 {project.status === "Paid" ? "Active" : "Past"}
-              </motion.span>
-            </motion.div>
+              </m.span>
+            </m.div>
 
-            <motion.p
+            <m.p
               className="mb-4 text-sm font-medium text-secondary"
               variants={childVariants}
             >
               {project.pricePerHour}
-            </motion.p>
+            </m.p>
 
             <AnimatePresence>
               {isExpanded ? (
-                <motion.div
+                <m.div
                   variants={expandedContentVariants}
                   initial="hidden"
                   animate="visible"
                   exit="hidden"
                   className="overflow-hidden"
                 >
-                  <motion.div
+                  <m.div
                     className="mb-4 flex flex-wrap gap-2"
                     variants={childVariants}
                   >
                     {project.categories.map((category) => (
-                      <motion.span
+                      <m.span
                         key={category}
                         variants={pillVariants}
                         whileHover="hover"
@@ -218,33 +224,33 @@ function ProjectCard({ project }: { project: Project }) {
                         className="select-none border border-secondary/25 px-4 py-2 font-display text-xs uppercase tracking-[0.14em] text-foreground"
                       >
                         {category}
-                      </motion.span>
+                      </m.span>
                     ))}
-                  </motion.div>
+                  </m.div>
 
                   {Array.isArray(project.description) ? (
-                    <motion.ul
+                    <m.ul
                       className="mb-4 list-disc space-y-2 pl-5 text-sm leading-7 text-secondary marker:text-accent"
                       variants={childVariants}
                     >
                       {project.description.map((item) => (
                         <li key={item}>{item}</li>
                       ))}
-                    </motion.ul>
+                    </m.ul>
                   ) : (
-                    <motion.p
+                    <m.p
                       className="mb-4 text-sm leading-7 text-secondary"
                       variants={childVariants}
                     >
                       {project.description}
-                    </motion.p>
+                    </m.p>
                   )}
 
-                  <motion.div
+                  <m.div
                     className="flex items-center gap-2 text-sm text-secondary"
                     variants={childVariants}
                   >
-                    <motion.div
+                    <m.div
                       whileHover={{ scale: 1.1, rotate: 5 }}
                       transition={{
                         type: "spring",
@@ -252,21 +258,21 @@ function ProjectCard({ project }: { project: Project }) {
                         damping: 25,
                       }}
                     >
-                      <MapPin className="h-4 w-4" />
-                    </motion.div>
+                      <MapPin className="size-4" />
+                    </m.div>
                     <span className="font-display text-xs uppercase tracking-[0.14em]">
                       {project.location}
                     </span>
                     <div className="mx-1 h-3 w-px bg-secondary/25" />
                     <span className="text-xs">{project.timeAgo}</span>
-                  </motion.div>
-                </motion.div>
+                  </m.div>
+                </m.div>
               ) : null}
             </AnimatePresence>
           </div>
         </div>
 
-        <motion.button
+        <m.button
           variants={chevronVariants}
           whileHover="hover"
           whileTap="tap"
@@ -274,10 +280,10 @@ function ProjectCard({ project }: { project: Project }) {
             event.stopPropagation();
             setIsExpanded(!isExpanded);
           }}
-          className="ml-3 flex h-9 w-9 shrink-0 items-center justify-center border border-secondary/25 bg-surface text-foreground shadow-sm"
+          className="ml-3 flex size-9 shrink-0 items-center justify-center border border-secondary/25 bg-surface text-foreground shadow-sm"
           aria-label={isExpanded ? "Collapse experience" : "Expand experience"}
         >
-          <motion.div
+          <m.div
             animate={{ rotate: isExpanded ? 180 : 0 }}
             transition={{
               type: "spring",
@@ -285,24 +291,25 @@ function ProjectCard({ project }: { project: Project }) {
               damping: 25,
             }}
           >
-            <ChevronDown className="h-4 w-4" />
-          </motion.div>
-        </motion.button>
+            <ChevronDown className="size-4" />
+          </m.div>
+        </m.button>
       </div>
-    </motion.div>
+    </m.div>
   );
 }
 
 export function ProjectCards({ projects }: ProjectCardsProps) {
   return (
-    <div className="w-full">
-      <motion.div
+    <LazyMotion features={domAnimation}>
+      <div className="w-full">
+      <m.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
         {projects.map((project, index) => (
-          <motion.div
+          <m.div
             key={project.id}
             initial={{ opacity: 0, y: 30, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -318,9 +325,10 @@ export function ProjectCards({ projects }: ProjectCardsProps) {
             }}
           >
             <ProjectCard project={project} />
-          </motion.div>
+          </m.div>
         ))}
-      </motion.div>
-    </div>
+      </m.div>
+      </div>
+    </LazyMotion>
   );
 }

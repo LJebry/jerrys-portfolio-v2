@@ -1,4 +1,3 @@
-import FlipGallery from "@/components/ui/flip-gallery";
 import { StoryViewer, type Story } from "@/components/ui/story-viewer";
 
 const storyTimestamp = "2026-04-29T20:30:00-04:00";
@@ -109,65 +108,6 @@ const storyUsers: Array<{
   },
 ];
 
-const flipGalleryImages = [
-  {
-    title: "Portfolio Portrait",
-    url: "/jerry-robayo-portrait-1821.jpeg",
-  },
-  {
-    title: "Wifey",
-    url: "/gallery/wifey-nyc-subway.jpeg",
-  },
-  {
-    title: "Wifey",
-    url: "/gallery/wifey-nyc-upside-down.jpeg",
-  },
-  {
-    title: "Wifey",
-    url: "/gallery/portrait-stage.jpeg",
-  },
-  {
-    title: "NYC Snowflake",
-    url: "/gallery/nyc-snowflake.jpeg",
-  },
-  {
-    title: "Grand Central",
-    url: "/gallery/nyc-grand-central.jpeg",
-  },
-  {
-    title: "Ferry View",
-    url: "/gallery/nyc-skyline.jpeg",
-  },
-  {
-    title: "Met Museum",
-    url: "/gallery/nyc-museum.jpeg",
-  },
-  {
-    title: "Tiny Dino",
-    url: "/gallery/wifey-nyc-theater.jpeg",
-  },
-  {
-    title: "My Cats",
-    url: "/gallery/my-cats.jpeg",
-  },
-  {
-    title: "Wifey",
-    url: "/gallery/wifey-close-1.jpeg",
-  },
-  {
-    title: "Wifey",
-    url: "/gallery/wifey-close-2.jpeg",
-  },
-  {
-    title: "Wifey",
-    url: "/gallery/wifey-close-3.jpeg",
-  },
-  {
-    title: "Wifey",
-    url: "/gallery/wifey-close-4.jpeg",
-  },
-];
-
 export function GallerySection() {
   return (
     <section id="gallery" className="py-14 sm:py-16 lg:py-20">
@@ -185,8 +125,7 @@ export function GallerySection() {
             <span className="block text-accent">Shots.</span>
           </h1>
           <p className="mt-8 max-w-xl text-xl leading-9 text-secondary sm:text-2xl sm:leading-10">
-            A visual shelf for portraits, Wifey, New York City, my cats, and
-            the small details around the portfolio.
+            A visual shelf for portraits, my wife, New York, my cats, and more!.
           </p>
         </div>
 
@@ -206,18 +145,6 @@ export function GallerySection() {
                 />
               ))}
             </div>
-          </div>
-
-          <div className="mt-10">
-            <div className="mb-5">
-              <h2 className="font-display text-sm uppercase tracking-[0.24em] text-foreground">
-                Flip Gallery
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-secondary">
-                Use the arrows to flip through the visual log.
-              </p>
-            </div>
-            <FlipGallery images={flipGalleryImages} />
           </div>
         </div>
       </div>

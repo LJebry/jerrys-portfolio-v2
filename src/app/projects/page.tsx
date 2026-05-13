@@ -1,5 +1,12 @@
 import { ProjectsSection } from "@/components/projects-section";
 import { SiteHeader } from "@/components/site-header";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Projects | Jerry Robayo",
+  description:
+    "Selected full stack, frontend, and product-ready web projects by Jerry Robayo.",
+};
 
 export default function ProjectsPage() {
   return (

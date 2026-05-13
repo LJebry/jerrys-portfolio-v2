@@ -1,5 +1,12 @@
 import { ContactSection } from "@/components/contact-section";
 import { SiteHeader } from "@/components/site-header";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact Jerry Robayo",
+  description:
+    "Contact Jerry Robayo about software engineering roles, projects, and collaboration.",
+};
 
 export default function ContactPage() {
   return (

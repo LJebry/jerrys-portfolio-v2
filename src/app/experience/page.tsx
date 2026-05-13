@@ -1,5 +1,12 @@
 import { ExperienceSection } from "@/components/experience-section";
 import { SiteHeader } from "@/components/site-header";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Experience | Jerry Robayo",
+  description:
+    "Software engineering experience, internships, and technical work by Jerry Robayo.",
+};
 
 export default function ExperiencePage() {
   return (

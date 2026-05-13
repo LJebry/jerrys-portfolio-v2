@@ -32,10 +32,10 @@ export function ContactCard({
       )}
       {...props}
     >
-      <PlusIcon className="absolute -left-3 -top-3 h-6 w-6 text-accent" />
-      <PlusIcon className="absolute -right-3 -top-3 h-6 w-6 text-accent" />
-      <PlusIcon className="absolute -bottom-3 -left-3 h-6 w-6 text-accent" />
-      <PlusIcon className="absolute -bottom-3 -right-3 h-6 w-6 text-accent" />
+      <PlusIcon className="absolute -left-3 -top-3 size-6 text-accent" />
+      <PlusIcon className="absolute -right-3 -top-3 size-6 text-accent" />
+      <PlusIcon className="absolute -bottom-3 -left-3 size-6 text-accent" />
+      <PlusIcon className="absolute -bottom-3 -right-3 size-6 text-accent" />
 
       <div className="flex flex-col justify-between lg:col-span-2">
         <div className="relative h-full space-y-5 px-5 py-8 md:p-8">
@@ -78,7 +78,7 @@ function ContactInfo({
       {...props}
     >
       <div className="shrink-0 border border-secondary/25 bg-background p-3">
-        <Icon className="h-5 w-5 text-accent" />
+        <Icon className="size-5 text-accent" />
       </div>
       <div className="min-w-0">
         <p className="font-display text-sm uppercase text-foreground">{label}</p>

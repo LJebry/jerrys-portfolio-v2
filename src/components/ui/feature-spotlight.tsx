@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 
@@ -76,12 +77,12 @@ export function FeaturedSpotlight() {
           </p>
         </div>
 
-        <a
+        <Link
           href="/contact"
           className="mt-6 flex items-center gap-4 md:mt-8 lg:mt-10"
         >
           <div
-            className="flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-500 md:h-11 md:w-11 lg:h-12 lg:w-12"
+            className="flex size-10 items-center justify-center rounded-full border transition-all duration-500 md:size-11 lg:size-12"
             style={{
               borderColor: isHovered ? "var(--foreground)" : "#9b968c4d",
               backgroundColor: isHovered ? "var(--foreground)" : "transparent",
@@ -94,7 +95,7 @@ export function FeaturedSpotlight() {
             }}
           >
             <ArrowUpRight
-              className="h-3.5 w-3.5 transition-transform duration-500 md:h-4 md:w-4"
+              className="size-3.5 transition-transform duration-500 md:size-4"
               style={{
                 transform: isHovered ? "rotate(45deg)" : "rotate(0deg)",
                 transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
@@ -112,7 +113,7 @@ export function FeaturedSpotlight() {
           >
             Get in touch
           </span>
-        </a>
+        </Link>
       </div>
 
       <div

@@ -64,12 +64,12 @@ export function GraduationCountdown() {
   }
 
   return (
-    <span className="mx-auto block max-w-[280px]">
+    <span className="mx-auto block max-w-70">
       <span className="grid grid-cols-4 gap-2">
       {values.map(([label, value]) => (
         <span
           key={label}
-          className="flex h-16 min-w-0 flex-col items-center justify-center border border-secondary/25 px-2 py-2 text-center"
+          className="flex h-16 min-w-0 flex-col items-center justify-center border border-secondary/25 p-2 text-center"
         >
           <span className="block font-display text-lg leading-none text-foreground">
             {value}

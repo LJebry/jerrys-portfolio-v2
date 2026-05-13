@@ -1,7 +1,9 @@
 "use client";
 
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 const menuItems = [
   { label: "JR", href: "/" },
@@ -15,10 +17,62 @@ const menuItems = [
 
 export default function NavMenu() {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="min-w-0">
-      <ul className="grid grid-cols-2 items-center gap-x-3 gap-y-2 sm:flex sm:justify-between sm:gap-3 lg:gap-5">
+    <nav className="min-w-0" aria-label="Primary navigation">
+      <div className="flex items-center justify-between sm:hidden">
+        <Link
+          href="/"
+          aria-current={pathname === "/" ? "page" : undefined}
+          className="font-display text-2xl font-semibold uppercase text-foreground"
+        >
+          J<span className="text-accent">R</span>
+        </Link>
+
+        <button
+          type="button"
+          onClick={() => setIsOpen((current) => !current)}
+          className="inline-flex size-11 items-center justify-center border border-secondary/35 text-foreground transition-colors hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          aria-controls="mobile-navigation"
+          aria-expanded={isOpen}
+          aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+        >
+          {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+        </button>
+      </div>
+
+      <ul
+        id="mobile-navigation"
+        className={[
+          "mt-4 grid gap-2 border-t border-secondary/25 pt-4 sm:hidden",
+          isOpen ? "block" : "hidden",
+        ].join(" ")}
+      >
+        {menuItems.slice(1).map((item) => {
+          const isActive = pathname === item.href;
+
+          return (
+            <li key={item.label} className="list-none">
+              <Link
+                href={item.href}
+                aria-current={isActive ? "page" : undefined}
+                onClick={() => setIsOpen(false)}
+                className={[
+                  "block border border-secondary/25 px-4 py-3 font-display text-sm font-semibold uppercase tracking-[0.16em] transition-colors",
+                  isActive
+                    ? "border-foreground bg-foreground text-background"
+                    : "text-foreground hover:border-accent hover:text-accent",
+                ].join(" ")}
+              >
+                {item.label}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+
+      <ul className="hidden items-center justify-between gap-3 sm:flex lg:gap-5">
         {menuItems.map((item) => {
           const isActive =
             item.href === "/" ? pathname === "/" : pathname === item.href;

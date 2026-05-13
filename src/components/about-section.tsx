@@ -1,4 +1,5 @@
 import { ArrowDownToLine, ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 import { GraduationCountdown } from "@/components/graduation-countdown";
 
 const profile = [
@@ -68,7 +69,7 @@ export function AboutSection() {
 
           <div className="mt-10 border border-secondary/25 bg-surface/45 p-5">
             <div className="mb-4 flex items-center gap-3">
-              <span className="h-3 w-3 rounded-full border border-accent bg-accent/70" />
+              <span className="size-3 rounded-full border border-accent bg-accent/70" />
               <p className="font-display text-sm uppercase tracking-[0.24em] text-accent">
                 Now
               </p>
@@ -129,7 +130,7 @@ export function AboutSection() {
                   rel="noreferrer"
                   className="inline-flex items-center gap-1 border-b border-secondary/35 transition-colors hover:border-accent hover:text-accent"
                 >
-                  GitHub <ArrowUpRight className="h-4 w-4" />
+                  GitHub <ArrowUpRight className="size-4" />
                 </a>
                 <a
                   href="https://www.linkedin.com/in/jerry-robayo"
@@ -137,19 +138,19 @@ export function AboutSection() {
                   rel="noreferrer"
                   className="inline-flex items-center gap-1 border-b border-secondary/35 transition-colors hover:border-accent hover:text-accent"
                 >
-                  LinkedIn <ArrowUpRight className="h-4 w-4" />
+                  LinkedIn <ArrowUpRight className="size-4" />
                 </a>
               </div>
             </div>
 
-            <a
+            <Link
               href="/jerry-robayo-resume.pdf"
               download
               className="mt-8 inline-flex w-full items-center justify-center gap-3 border border-accent px-5 py-4 font-display text-sm uppercase tracking-[0.18em] text-foreground transition-colors hover:bg-accent"
             >
               Download Resume
-              <ArrowDownToLine className="h-4 w-4" />
-            </a>
+              <ArrowDownToLine className="size-4" />
+            </Link>
           </aside>
 
           <div id="projects" className="mt-6">
@@ -160,7 +161,7 @@ export function AboutSection() {
               {skillGroups.map((group) => (
                 <div
                   key={group.label}
-                  className="border border-secondary/25 bg-background px-4 py-4"
+                  className="border border-secondary/25 bg-background p-4"
                 >
                   <p className="font-display text-xs uppercase tracking-[0.18em] text-accent">
                     {group.label}

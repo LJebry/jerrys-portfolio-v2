@@ -1,8 +1,8 @@
 "use client";
 
-import { forwardRef, useImperativeHandle, useRef } from "react";
-import type { ComponentType } from "react";
-import { motion } from "framer-motion";
+import { useImperativeHandle, useRef } from "react";
+import type { ComponentType, Ref } from "react";
+import { LazyMotion, domAnimation, m } from "framer-motion";
 import {
   Toaster as SonnerToaster,
   toast as sonnerToast,
@@ -82,8 +82,13 @@ const toastAnimation = {
   exit: { opacity: 0, y: 50, scale: 0.95 },
 };
 
-const Toaster = forwardRef<ToasterRef, { defaultPosition?: Position }>(
-  ({ defaultPosition = "bottom-right" }, ref) => {
+function Toaster({
+  defaultPosition = "bottom-right",
+  ref,
+}: {
+  defaultPosition?: Position;
+  ref?: Ref<ToasterRef>;
+}) {
     const toastReference = useRef<ReturnType<
       typeof sonnerToast.custom
     > | null>(null);
@@ -103,75 +108,77 @@ const Toaster = forwardRef<ToasterRef, { defaultPosition?: Position }>(
 
         toastReference.current = sonnerToast.custom(
           (toastId) => (
-            <motion.div
-              variants={toastAnimation}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className={cn(
-                "flex w-full max-w-xs items-center justify-between rounded-xl border p-3 shadow-md",
-                variantStyles[variant],
-              )}
-            >
-              <div className="flex items-start gap-2">
-                <Icon
-                  className={cn(
-                    "mt-0.5 h-4 w-4 flex-shrink-0",
-                    iconColor[variant],
-                  )}
-                />
-                <div className="space-y-0.5">
-                  {title && (
-                    <h3
+            <LazyMotion features={domAnimation}>
+              <m.div
+                variants={toastAnimation}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className={cn(
+                  "flex w-full max-w-xs items-center justify-between rounded-xl border p-3 shadow-md",
+                  variantStyles[variant],
+                )}
+              >
+                <div className="flex items-start gap-2">
+                  <Icon
+                    className={cn(
+                      "mt-0.5 size-4 flex-shrink-0",
+                      iconColor[variant],
+                    )}
+                  />
+                  <div className="space-y-0.5">
+                    {title && (
+                      <h3
+                        className={cn(
+                          "text-xs font-medium leading-none",
+                          titleColor[variant],
+                          highlightTitle && titleColor.success,
+                        )}
+                      >
+                        {title}
+                      </h3>
+                    )}
+                    <p className="text-xs text-secondary">{message}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {actions?.label && (
+                    <Button
+                      variant={actions.variant || "outline"}
+                      size="sm"
+                      onClick={() => {
+                        actions.onClick();
+                        sonnerToast.dismiss(toastId);
+                      }}
                       className={cn(
-                        "text-xs font-medium leading-none",
-                        titleColor[variant],
-                        highlightTitle && titleColor.success,
+                        "cursor-pointer",
+                        variant === "success" &&
+                          "border-green-600 text-green-500 hover:bg-green-600/10",
+                        variant === "error" &&
+                          "border-destructive text-destructive hover:bg-destructive/10",
+                        variant === "warning" &&
+                          "border-amber-600 text-amber-500 hover:bg-amber-600/10",
                       )}
                     >
-                      {title}
-                    </h3>
+                      {actions.label}
+                    </Button>
                   )}
-                  <p className="text-xs text-secondary">{message}</p>
-                </div>
-              </div>
 
-              <div className="flex items-center gap-2">
-                {actions?.label && (
-                  <Button
-                    variant={actions.variant || "outline"}
-                    size="sm"
+                  <button
                     onClick={() => {
-                      actions.onClick();
                       sonnerToast.dismiss(toastId);
+                      onDismiss?.();
                     }}
-                    className={cn(
-                      "cursor-pointer",
-                      variant === "success" &&
-                        "border-green-600 text-green-500 hover:bg-green-600/10",
-                      variant === "error" &&
-                        "border-destructive text-destructive hover:bg-destructive/10",
-                      variant === "warning" &&
-                        "border-amber-600 text-amber-500 hover:bg-amber-600/10",
-                    )}
+                    className="rounded-full p-1 transition-colors hover:bg-secondary/10 focus:outline-none focus:ring-2 focus:ring-accent"
+                    aria-label="Dismiss notification"
                   >
-                    {actions.label}
-                  </Button>
-                )}
-
-                <button
-                  onClick={() => {
-                    sonnerToast.dismiss(toastId);
-                    onDismiss?.();
-                  }}
-                  className="rounded-full p-1 transition-colors hover:bg-secondary/10 focus:outline-none focus:ring-2 focus:ring-accent"
-                  aria-label="Dismiss notification"
-                >
-                  <X className="h-3 w-3 text-secondary" />
-                </button>
-              </div>
-            </motion.div>
+                    <X className="size-3 text-secondary" />
+                  </button>
+                </div>
+              </m.div>
+            </LazyMotion>
           ),
           { duration, position },
         );
@@ -184,8 +191,7 @@ const Toaster = forwardRef<ToasterRef, { defaultPosition?: Position }>(
         toastOptions={{ unstyled: true, className: "flex justify-end" }}
       />
     );
-  },
-);
+}
 
 Toaster.displayName = "Toaster";
 

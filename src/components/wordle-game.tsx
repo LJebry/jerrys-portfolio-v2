@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useMemo, useReducer, useRef } from "react";
 import Toaster, { type ToasterRef } from "@/components/ui/toast";
 
 type LetterStatus = "empty" | "absent" | "present" | "correct";
@@ -30,15 +30,68 @@ type AnswerResponse = {
   error?: string;
 };
 
+type WordleState = {
+  guess: string;
+  rows: GuessRow[];
+  message: string;
+  isSubmitting: boolean;
+  nextWordCountdown: string;
+};
+
+type WordleAction =
+  | { type: "set-guess"; guess: string }
+  | { type: "set-countdown"; nextWordCountdown: string }
+  | {
+      type: "notify";
+      message: string;
+    }
+  | { type: "submit-start" }
+  | { type: "submit-finish" }
+  | { type: "commit-guess"; row: GuessRow };
+
 const maxAttempts = 6;
 const wordLength = 5;
 const keyboardRows = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
+const initialWordleState: WordleState = {
+  guess: "",
+  rows: [],
+  message: "Guess today's five-letter word in six tries.",
+  isSubmitting: false,
+  nextWordCountdown: "",
+};
 const statusRank: Record<LetterStatus, number> = {
   empty: 0,
   absent: 1,
   present: 2,
   correct: 3,
 };
+
+function wordleReducer(
+  state: WordleState,
+  action: WordleAction,
+): WordleState {
+  switch (action.type) {
+    case "set-guess":
+      return { ...state, guess: action.guess };
+    case "set-countdown":
+      return {
+        ...state,
+        nextWordCountdown: action.nextWordCountdown,
+      };
+    case "notify":
+      return { ...state, message: action.message };
+    case "submit-start":
+      return { ...state, isSubmitting: true, message: "Checking..." };
+    case "submit-finish":
+      return { ...state, isSubmitting: false };
+    case "commit-guess":
+      return {
+        ...state,
+        guess: "",
+        rows: [...state.rows, action.row],
+      };
+  }
+}
 
 function getNextWordCountdown() {
   const now = new Date();
@@ -97,22 +150,53 @@ function getKeyClass(status: LetterStatus) {
   }
 }
 
+function WordleHeader({
+  attempts,
+  nextWordCountdown,
+}: {
+  attempts: number;
+  nextWordCountdown: string;
+}) {
+  return (
+    <div className="mb-4 flex flex-col gap-2 border-b border-secondary/25 pb-4 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <p className="font-display text-xs uppercase tracking-[0.24em] text-accent">
+          Daily Wordle
+        </p>
+        <h2 className="mt-2 font-display text-4xl font-semibold uppercase text-foreground">
+          Play Break
+        </h2>
+      </div>
+      <div className="text-left text-sm text-secondary sm:text-right">
+        <p>
+          {attempts}/{maxAttempts} attempts
+        </p>
+        <p className="mt-1 font-display text-xs uppercase tracking-[0.16em] text-secondary/75">
+          Next word{" "}
+          <span className="text-foreground">
+            {nextWordCountdown || "--:--:--"}
+          </span>
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export function WordleGame() {
   const toasterRef = useRef<ToasterRef>(null);
-  const [guess, setGuess] = useState("");
-  const [rows, setRows] = useState<GuessRow[]>([]);
-  const [message, setMessage] = useState(
-    "Guess today's five-letter word in six tries.",
-  );
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [nextWordCountdown, setNextWordCountdown] = useState("");
+  const [state, dispatch] = useReducer(wordleReducer, initialWordleState);
+  const { guess, rows, message, isSubmitting, nextWordCountdown } = state;
   const hasWon = rows.some((row) =>
     row.statuses.every((status) => status === "correct"),
   );
   const isComplete = hasWon || rows.length >= maxAttempts;
 
   useEffect(() => {
-    const updateCountdown = () => setNextWordCountdown(getNextWordCountdown());
+    const updateCountdown = () =>
+      dispatch({
+        type: "set-countdown",
+        nextWordCountdown: getNextWordCountdown(),
+      });
 
     updateCountdown();
     const intervalId = window.setInterval(updateCountdown, 1000);
@@ -129,7 +213,7 @@ export function WordleGame() {
     nextMessage: string;
     variant?: "default" | "success" | "error" | "warning";
   }) {
-    setMessage(nextMessage);
+    dispatch({ type: "notify", message: nextMessage });
     toasterRef.current?.show({
       title,
       message: nextMessage,
@@ -189,7 +273,10 @@ export function WordleGame() {
 
   function addLetter(letter: string) {
     if (isSubmitting || isComplete || guess.length >= wordLength) return;
-    setGuess((currentGuess) => `${currentGuess}${letter}`.slice(0, wordLength));
+    dispatch({
+      type: "set-guess",
+      guess: `${guess}${letter}`.slice(0, wordLength),
+    });
   }
 
   async function revealAnswer() {
@@ -224,8 +311,7 @@ export function WordleGame() {
       return;
     }
 
-    setIsSubmitting(true);
-    setMessage("Checking...");
+    dispatch({ type: "submit-start" });
 
     try {
       const response = await fetch("/api/wordle", {
@@ -253,8 +339,13 @@ export function WordleGame() {
           statuses: getStatuses(result),
         },
       ];
-      setRows(nextRows);
-      setGuess("");
+      dispatch({
+        type: "commit-guess",
+        row: {
+          guess: normalizedGuess,
+          statuses: getStatuses(result),
+        },
+      });
 
       if (result.was_correct) {
         notify({
@@ -282,7 +373,7 @@ export function WordleGame() {
         variant: "error",
       });
     } finally {
-      setIsSubmitting(false);
+      dispatch({ type: "submit-finish" });
     }
   }
 
@@ -290,29 +381,12 @@ export function WordleGame() {
     <div className="border border-secondary/25 bg-surface p-4 sm:p-5">
       <Toaster ref={toasterRef} defaultPosition="bottom-right" />
 
-      <div className="mb-4 flex flex-col gap-2 border-b border-secondary/25 pb-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="font-display text-xs uppercase tracking-[0.24em] text-accent">
-            Daily Wordle
-          </p>
-          <h2 className="mt-2 font-display text-4xl font-semibold uppercase text-foreground">
-            Play Break
-          </h2>
-        </div>
-        <div className="text-left text-sm text-secondary sm:text-right">
-          <p>
-            {rows.length}/{maxAttempts} attempts
-          </p>
-          <p className="mt-1 font-display text-xs uppercase tracking-[0.16em] text-secondary/75">
-            Next word{" "}
-            <span className="text-foreground">
-              {nextWordCountdown || "--:--:--"}
-            </span>
-          </p>
-        </div>
-      </div>
+      <WordleHeader
+        attempts={rows.length}
+        nextWordCountdown={nextWordCountdown}
+      />
 
-      <div className="mx-auto grid max-w-[240px] gap-1">
+      <div className="mx-auto grid max-w-60 gap-1">
         {boardRows.map((row, rowIndex) => (
           <div key={rowIndex} className="grid grid-cols-5 gap-1">
             {row.letters.map((letter, letterIndex) => (
@@ -332,7 +406,7 @@ export function WordleGame() {
       <form
         id="wordle-guess-form"
         onSubmit={handleSubmit}
-        className="mx-auto mt-3 flex max-w-[270px] gap-3"
+        className="mx-auto mt-3 flex max-w-67.5 gap-3"
       >
         <input
           value={guess}
@@ -340,7 +414,7 @@ export function WordleGame() {
             const nextValue = event.target.value
               .replace(/[^a-zA-Z]/g, "")
               .slice(0, wordLength);
-            setGuess(nextValue);
+            dispatch({ type: "set-guess", guess: nextValue });
           }}
           disabled={isSubmitting || isComplete}
           aria-label="Five-letter guess"
@@ -358,7 +432,7 @@ export function WordleGame() {
       </form>
 
       <div
-        className="mx-auto mt-4 grid max-w-[420px] gap-1.5"
+        className="mx-auto mt-4 grid max-w-105 gap-1.5"
         aria-label="Guessed letters keyboard"
       >
         {keyboardRows.map((keyboardRow, rowIndex) => (

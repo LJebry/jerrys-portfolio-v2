@@ -1,5 +1,12 @@
 import { AboutSection } from "@/components/about-section";
 import { SiteHeader } from "@/components/site-header";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About Jerry Robayo",
+  description:
+    "Learn about Jerry Robayo's background, skills, education, and software engineering goals.",
+};
 
 export default function AboutMePage() {
   return (

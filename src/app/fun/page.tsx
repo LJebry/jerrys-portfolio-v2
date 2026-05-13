@@ -1,5 +1,12 @@
 import { FunSection } from "@/components/fun-section";
 import { SiteHeader } from "@/components/site-header";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Fun | Jerry Robayo",
+  description:
+    "A daily Wordle-style play break from Jerry Robayo's portfolio.",
+};
 
 export default function FunPage() {
   return (

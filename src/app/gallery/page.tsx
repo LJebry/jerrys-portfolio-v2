@@ -1,5 +1,12 @@
 import { GallerySection } from "@/components/gallery-section";
 import { SiteHeader } from "@/components/site-header";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Gallery | Jerry Robayo",
+  description:
+    "Visual notes, story-style highlights, and gallery moments from Jerry Robayo.",
+};
 
 export default function GalleryPage() {
   return (

@@ -1,9 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import * as React from "react";
 import {
   AnimatePresence,
-  motion,
+  LazyMotion,
+  domAnimation,
+  m,
   type PanInfo,
   type Variants,
 } from "framer-motion";
@@ -107,7 +110,7 @@ function StoryThumbnail({
       className="group relative flex cursor-pointer flex-col items-center gap-2 rounded-lg bg-transparent outline-none focus-visible:ring-2 focus-visible:ring-accent"
       aria-label={`View ${username}'s stories`}
     >
-      <div className="relative h-[72px] w-[72px]">
+      <div className="relative size-[72px]">
         <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100">
           {segmentCount === 1 ? (
             <circle
@@ -122,7 +125,7 @@ function StoryThumbnail({
               )}
             />
           ) : (
-            stories.map((_, index) => {
+            stories.map((story, index) => {
               const startAngle = -90 + index * (segmentDegrees + gapDegrees);
               const endAngle = startAngle + segmentDegrees;
               const isViewed = viewedIndices.has(index);
@@ -137,7 +140,7 @@ function StoryThumbnail({
 
               return (
                 <path
-                  key={index}
+                  key={story.id}
                   d={`M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2}`}
                   fill="none"
                   strokeWidth="5"
@@ -155,7 +158,7 @@ function StoryThumbnail({
         </svg>
 
         <div className="absolute inset-[5px] rounded-full bg-background p-[2px]">
-          <div className="h-full w-full overflow-hidden rounded-full bg-surface">
+          <div className="relative h-full w-full overflow-hidden rounded-full bg-surface">
             {lastStory.type === "video" ? (
               <video
                 src={lastStory.src}
@@ -166,10 +169,13 @@ function StoryThumbnail({
                 preload="metadata"
               />
             ) : (
-              <img
+              <Image
                 src={lastStory.src}
                 alt={`${username}'s story`}
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                fill
+                sizes="72px"
+                className="object-cover transition-transform duration-300 group-hover:scale-110"
+                unoptimized
               />
             )}
           </div>
@@ -207,7 +213,7 @@ function ProgressBar({
             key={index}
             className="h-0.5 flex-1 overflow-hidden rounded-full bg-white/30"
           >
-            <motion.div
+            <m.div
               className="h-full rounded-full bg-white"
               initial={{ width: isPast ? "100%" : "0%" }}
               animate={{
@@ -255,7 +261,7 @@ function StoryContent({
     <>
       {showSpinner ? (
         <div className="absolute inset-0 z-10 flex items-center justify-center">
-          <Loader2 className="h-10 w-10 animate-spin text-white" />
+          <Loader2 className="size-10 animate-spin text-white" />
         </div>
       ) : null}
       {story.type === "video" ? (
@@ -282,17 +288,169 @@ function StoryContent({
           onEnded={onVideoEnded}
         />
       ) : (
-        <img
+        <Image
           src={story.src}
           alt=""
+          fill
+          sizes="100vw"
           className={cn(
-            "h-full w-full object-contain transition-opacity duration-200",
+            "object-contain transition-opacity duration-200",
             isInitialLoading ? "opacity-0" : "opacity-100",
           )}
           onLoad={onImageLoad}
+          unoptimized
         />
       )}
     </>
+  );
+}
+
+interface StoryModalHeaderProps {
+  storiesLength: number;
+  currentIndex: number;
+  progress: number;
+  viewedIndices: Set<number>;
+  isPaused: boolean;
+  currentStory: Story;
+  avatar: string;
+  username: string;
+  timestamp?: string;
+  isMuted: boolean;
+  onToggleMute: () => void;
+  onClose: () => void;
+}
+
+function StoryModalHeader({
+  storiesLength,
+  currentIndex,
+  progress,
+  viewedIndices,
+  isPaused,
+  currentStory,
+  avatar,
+  username,
+  timestamp,
+  isMuted,
+  onToggleMute,
+  onClose,
+}: StoryModalHeaderProps) {
+  return (
+    <div className="absolute left-0 right-0 top-0 z-10 bg-gradient-to-b from-black/60 to-transparent pb-4 pt-2">
+      <ProgressBar
+        count={storiesLength}
+        currentIndex={currentIndex}
+        progress={progress}
+        viewedIndices={viewedIndices}
+      />
+
+      <div className="mt-3 flex items-center justify-between px-4">
+        <div className="flex items-center gap-3">
+          <div className="size-8 overflow-hidden rounded-full">
+            <Image
+              src={avatar}
+              alt={username}
+              width={32}
+              height={32}
+              className="size-8 object-cover"
+              unoptimized
+            />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-white">{username}</span>
+            {timestamp ? (
+              <span className="text-xs text-white/60">
+                {formatTimestamp(timestamp)}
+              </span>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {isPaused ? (
+            <div className="flex items-center gap-1 text-white/80">
+              <Pause className="size-4" />
+              <span className="text-xs">Paused</span>
+            </div>
+          ) : null}
+
+          {currentStory.type === "video" ? (
+            <button
+              type="button"
+              className="inline-flex size-8 items-center justify-center rounded-md text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+              onClick={(event) => {
+                event.stopPropagation();
+                onToggleMute();
+              }}
+              aria-label={isMuted ? "Unmute" : "Mute"}
+            >
+              {isMuted ? (
+                <VolumeX className="size-5" />
+              ) : (
+                <Volume2 className="size-5" />
+              )}
+            </button>
+          ) : null}
+
+          <button
+            type="button"
+            className="inline-flex size-8 items-center justify-center rounded-md text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+            onClick={(event) => {
+              event.stopPropagation();
+              onClose();
+            }}
+            aria-label="Close"
+          >
+            <X className="size-5" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface StoryNavButtonsProps {
+  currentIndex: number;
+  storiesLength: number;
+  onPrevious: () => void;
+  onNext: () => void;
+}
+
+function StoryNavButtons({
+  currentIndex,
+  storiesLength,
+  onPrevious,
+  onNext,
+}: StoryNavButtonsProps) {
+  return (
+    <div className="pointer-events-none absolute inset-y-0 left-0 right-0 hidden items-center justify-between px-4 md:flex">
+      <button
+        type="button"
+        className={cn(
+          "pointer-events-auto inline-flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50",
+          currentIndex === 0 && "cursor-not-allowed opacity-50",
+        )}
+        onClick={(event) => {
+          event.stopPropagation();
+          onPrevious();
+        }}
+        disabled={currentIndex === 0}
+        aria-label="Previous story"
+      >
+        <ChevronLeft className="size-6" />
+      </button>
+
+      <button
+        type="button"
+        className="pointer-events-auto inline-flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+        onClick={(event) => {
+          event.stopPropagation();
+          onNext();
+        }}
+        aria-label={currentIndex === storiesLength - 1 ? "Close" : "Next story"}
+      >
+        <ChevronRight className="size-6" />
+      </button>
+    </div>
   );
 }
 
@@ -301,10 +459,72 @@ interface StoryViewerModalProps {
   username: string;
   avatar: string;
   timestamp?: string;
-  initialIndex: number;
+  currentIndex: number;
   viewedIndices: Set<number>;
   onClose: () => void;
-  onStoryChange: (index: number) => void;
+  onCurrentIndexChange: (index: number) => void;
+}
+
+type ViewerState = {
+  progress: number;
+  isPaused: boolean;
+  isMuted: boolean;
+  duration: number;
+  direction: number;
+  isVideoReady: boolean;
+  isVideoBuffering: boolean;
+};
+
+type ViewerAction =
+  | { type: "reset"; direction: number }
+  | { type: "set-progress"; progress: number }
+  | { type: "set-paused"; isPaused: boolean }
+  | { type: "toggle-paused" }
+  | { type: "toggle-muted" }
+  | { type: "video-ready"; duration: number }
+  | { type: "set-buffering"; isVideoBuffering: boolean };
+
+const initialViewerState: ViewerState = {
+  progress: 0,
+  isPaused: false,
+  isMuted: true,
+  duration: DEFAULT_IMAGE_DURATION,
+  direction: 0,
+  isVideoReady: false,
+  isVideoBuffering: false,
+};
+
+function viewerReducer(
+  state: ViewerState,
+  action: ViewerAction,
+): ViewerState {
+  switch (action.type) {
+    case "reset":
+      return {
+        ...state,
+        progress: 0,
+        direction: action.direction,
+        isVideoReady: false,
+        isVideoBuffering: false,
+      };
+    case "set-progress":
+      return { ...state, progress: action.progress };
+    case "set-paused":
+      return { ...state, isPaused: action.isPaused };
+    case "toggle-paused":
+      return { ...state, isPaused: !state.isPaused };
+    case "toggle-muted":
+      return { ...state, isMuted: !state.isMuted };
+    case "video-ready":
+      return {
+        ...state,
+        duration: action.duration,
+        isVideoReady: true,
+        isVideoBuffering: false,
+      };
+    case "set-buffering":
+      return { ...state, isVideoBuffering: action.isVideoBuffering };
+  }
 }
 
 function StoryViewerModal({
@@ -312,19 +532,24 @@ function StoryViewerModal({
   username,
   avatar,
   timestamp,
-  initialIndex,
+  currentIndex,
   viewedIndices,
   onClose,
-  onStoryChange,
+  onCurrentIndexChange,
 }: StoryViewerModalProps) {
-  const [currentIndex, setCurrentIndex] = React.useState(initialIndex);
-  const [progress, setProgress] = React.useState(0);
-  const [isPaused, setIsPaused] = React.useState(false);
-  const [isMuted, setIsMuted] = React.useState(true);
-  const [duration, setDuration] = React.useState(DEFAULT_IMAGE_DURATION);
-  const [direction, setDirection] = React.useState(0);
-  const [isVideoReady, setIsVideoReady] = React.useState(false);
-  const [isVideoBuffering, setIsVideoBuffering] = React.useState(false);
+  const [state, dispatch] = React.useReducer(
+    viewerReducer,
+    initialViewerState,
+  );
+  const {
+    progress,
+    isPaused,
+    isMuted,
+    duration,
+    direction,
+    isVideoReady,
+    isVideoBuffering,
+  } = state;
 
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -345,36 +570,30 @@ function StoryViewerModal({
 
   const goToNext = React.useCallback(() => {
     if (currentIndex < stories.length - 1) {
-      setDirection(1);
-      setProgress(0);
-      setIsVideoReady(false);
-      setIsVideoBuffering(false);
+      dispatch({ type: "reset", direction: 1 });
       elapsedRef.current = 0;
       startTimeRef.current = Date.now();
-      setCurrentIndex((prev) => prev + 1);
+      onCurrentIndexChange(currentIndex + 1);
     } else {
       onClose();
     }
-  }, [currentIndex, stories.length, onClose]);
+  }, [currentIndex, stories.length, onClose, onCurrentIndexChange]);
 
   const goToPrevious = React.useCallback(() => {
     if (currentIndex > 0) {
-      setDirection(-1);
-      setProgress(0);
-      setIsVideoReady(false);
-      setIsVideoBuffering(false);
+      dispatch({ type: "reset", direction: -1 });
       elapsedRef.current = 0;
       startTimeRef.current = Date.now();
-      setCurrentIndex((prev) => prev - 1);
+      onCurrentIndexChange(currentIndex - 1);
     } else {
-      setProgress(0);
+      dispatch({ type: "set-progress", progress: 0 });
       elapsedRef.current = 0;
     }
-  }, [currentIndex]);
+  }, [currentIndex, onCurrentIndexChange]);
 
-  React.useEffect(() => {
-    onStoryChange(currentIndex);
-  }, [currentIndex, onStoryChange]);
+  const onKeyGoToNext = React.useEffectEvent(goToNext);
+  const onKeyGoToPrevious = React.useEffectEvent(goToPrevious);
+  const onKeyClose = React.useEffectEvent(onClose);
 
   React.useEffect(() => {
     if (currentStory.type === "video") {
@@ -400,7 +619,7 @@ function StoryViewerModal({
       const elapsed = Date.now() - startTimeRef.current;
       elapsedRef.current = elapsed;
       const nextProgress = Math.min((elapsed / currentDuration) * 100, 100);
-      setProgress(nextProgress);
+      dispatch({ type: "set-progress", progress: nextProgress });
 
       if (nextProgress >= 100) {
         goToNext();
@@ -425,24 +644,24 @@ function StoryViewerModal({
     const handleKeyDown = (event: KeyboardEvent) => {
       switch (event.key) {
         case "ArrowLeft":
-          goToPrevious();
+          onKeyGoToPrevious();
           break;
         case "ArrowRight":
-          goToNext();
+          onKeyGoToNext();
           break;
         case "Escape":
-          onClose();
+          onKeyClose();
           break;
         case " ":
           event.preventDefault();
-          setIsPaused((prev) => !prev);
+          dispatch({ type: "toggle-paused" });
           break;
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [goToNext, goToPrevious, onClose]);
+  }, []);
 
   React.useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -491,14 +710,14 @@ function StoryViewerModal({
   );
 
   return (
-    <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black"
+    <m.div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-gray-950"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
     >
-      <motion.div
+      <m.div
         ref={containerRef}
         className="relative mx-auto flex h-full w-full max-w-lg flex-col overflow-hidden"
         initial={{ scale: 0.9, opacity: 0 }}
@@ -509,86 +728,35 @@ function StoryViewerModal({
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.1}
         onDragEnd={handleDragEnd}
-        onPointerDown={() => setIsPaused(true)}
-        onPointerUp={() => setIsPaused(false)}
-        onPointerLeave={() => setIsPaused(false)}
+        onPointerDown={() => dispatch({ type: "set-paused", isPaused: true })}
+        onPointerUp={() => dispatch({ type: "set-paused", isPaused: false })}
+        onPointerLeave={() =>
+          dispatch({ type: "set-paused", isPaused: false })
+        }
       >
-        <div className="absolute left-0 right-0 top-0 z-10 bg-gradient-to-b from-black/60 to-transparent pb-4 pt-2">
-          <ProgressBar
-            count={stories.length}
-            currentIndex={currentIndex}
-            progress={progress}
-            viewedIndices={localViewedIndices}
-          />
+        <StoryModalHeader
+          storiesLength={stories.length}
+          currentIndex={currentIndex}
+          progress={progress}
+          viewedIndices={localViewedIndices}
+          isPaused={isPaused}
+          currentStory={currentStory}
+          avatar={avatar}
+          username={username}
+          timestamp={timestamp}
+          isMuted={isMuted}
+          onToggleMute={() => dispatch({ type: "toggle-muted" })}
+          onClose={onClose}
+        />
 
-          <div className="mt-3 flex items-center justify-between px-4">
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 overflow-hidden rounded-full">
-                <img
-                  src={avatar}
-                  alt={username}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium text-white">
-                  {username}
-                </span>
-                {timestamp ? (
-                  <span className="text-xs text-white/60">
-                    {formatTimestamp(timestamp)}
-                  </span>
-                ) : null}
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              {isPaused ? (
-                <div className="flex items-center gap-1 text-white/80">
-                  <Pause className="h-4 w-4" />
-                  <span className="text-xs">Paused</span>
-                </div>
-              ) : null}
-
-              {currentStory.type === "video" ? (
-                <button
-                  type="button"
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-md text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setIsMuted((prev) => !prev);
-                  }}
-                  aria-label={isMuted ? "Unmute" : "Mute"}
-                >
-                  {isMuted ? (
-                    <VolumeX className="h-5 w-5" />
-                  ) : (
-                    <Volume2 className="h-5 w-5" />
-                  )}
-                </button>
-              ) : null}
-
-              <button
-                type="button"
-                className="inline-flex h-8 w-8 items-center justify-center rounded-md text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onClose();
-                }}
-                aria-label="Close"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div
+        <button
+          type="button"
           className="relative flex flex-1 select-none items-center justify-center overflow-hidden"
           onClick={handleTap}
+          aria-label="Navigate story"
         >
           <AnimatePresence initial={false} custom={direction} mode="popLayout">
-            <motion.div
+            <m.div
               key={currentStory.id}
               custom={direction}
               variants={slideVariants}
@@ -607,73 +775,58 @@ function StoryViewerModal({
                 isInitialLoading={!isVideoReady}
                 isBuffering={isVideoBuffering}
                 onVideoReady={(videoDuration) => {
-                  setDuration(videoDuration);
-                  setIsVideoReady(true);
-                  setIsVideoBuffering(false);
+                  dispatch({ type: "video-ready", duration: videoDuration });
                 }}
                 onVideoTimeUpdate={(currentTime, videoDuration) => {
                   if (videoDuration > 0) {
-                    setProgress((currentTime / videoDuration) * 100);
+                    dispatch({
+                      type: "set-progress",
+                      progress: (currentTime / videoDuration) * 100,
+                    });
                   }
                 }}
-                onVideoWaiting={() => setIsVideoBuffering(true)}
-                onVideoPlaying={() => setIsVideoBuffering(false)}
+                onVideoWaiting={() =>
+                  dispatch({ type: "set-buffering", isVideoBuffering: true })
+                }
+                onVideoPlaying={() =>
+                  dispatch({ type: "set-buffering", isVideoBuffering: false })
+                }
                 onVideoEnded={goToNext}
-                onImageLoad={() => setIsVideoReady(true)}
+                onImageLoad={() =>
+                  dispatch({
+                    type: "video-ready",
+                    duration: currentDuration,
+                  })
+                }
                 videoRef={videoRef}
               />
-            </motion.div>
+            </m.div>
           </AnimatePresence>
-        </div>
+        </button>
 
-        <div className="pointer-events-none absolute inset-y-0 left-0 right-0 hidden items-center justify-between px-4 md:flex">
-          <button
-            type="button"
-            className={cn(
-              "pointer-events-auto inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50",
-              currentIndex === 0 && "cursor-not-allowed opacity-50",
-            )}
-            onClick={(event) => {
-              event.stopPropagation();
-              goToPrevious();
-            }}
-            disabled={currentIndex === 0}
-            aria-label="Previous story"
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </button>
-
-          <button
-            type="button"
-            className="pointer-events-auto inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
-            onClick={(event) => {
-              event.stopPropagation();
-              goToNext();
-            }}
-            aria-label={currentIndex === stories.length - 1 ? "Close" : "Next story"}
-          >
-            <ChevronRight className="h-6 w-6" />
-          </button>
-        </div>
-      </motion.div>
-    </motion.div>
+        <StoryNavButtons
+          currentIndex={currentIndex}
+          storiesLength={stories.length}
+          onPrevious={goToPrevious}
+          onNext={goToNext}
+        />
+      </m.div>
+    </m.div>
   );
 }
 
-const StoryViewer = React.forwardRef<HTMLDivElement, StoryViewerProps>(
-  (
-    {
-      stories,
-      username,
-      avatar,
-      timestamp,
-      onStoryView,
-      onAllStoriesViewed,
-      className,
-    },
-    ref,
-  ) => {
+function StoryViewer({
+  stories,
+  username,
+  avatar,
+  timestamp,
+  onStoryView,
+  onAllStoriesViewed,
+  className,
+  ref,
+}: StoryViewerProps & { ref?: React.Ref<HTMLDivElement> }) {
     const [isOpen, setIsOpen] = React.useState(false);
+    const [currentIndex, setCurrentIndex] = React.useState(0);
     const [viewedIndices, setViewedIndices] = React.useState<Set<number>>(
       () => new Set(),
     );
@@ -704,14 +857,28 @@ const StoryViewer = React.forwardRef<HTMLDivElement, StoryViewerProps>(
       [stories, onStoryView, onAllStoriesViewed],
     );
 
+    const openViewer = React.useCallback(() => {
+      setCurrentIndex(firstUnviewedIndex);
+      handleStoryChange(firstUnviewedIndex);
+      setIsOpen(true);
+    }, [firstUnviewedIndex, handleStoryChange]);
+
+    const handleCurrentIndexChange = React.useCallback(
+      (index: number) => {
+        setCurrentIndex(index);
+        handleStoryChange(index);
+      },
+      [handleStoryChange],
+    );
+
     return (
-      <>
+      <LazyMotion features={domAnimation}>
         <div ref={ref} className={className}>
           <StoryThumbnail
             stories={stories}
             username={username}
             viewedIndices={viewedIndices}
-            onClick={() => setIsOpen(true)}
+            onClick={openViewer}
           />
         </div>
 
@@ -722,17 +889,16 @@ const StoryViewer = React.forwardRef<HTMLDivElement, StoryViewerProps>(
               username={username}
               avatar={avatar}
               timestamp={timestamp}
-              initialIndex={firstUnviewedIndex}
+              currentIndex={currentIndex}
               viewedIndices={viewedIndices}
               onClose={() => setIsOpen(false)}
-              onStoryChange={handleStoryChange}
+              onCurrentIndexChange={handleCurrentIndexChange}
             />
           ) : null}
         </AnimatePresence>
-      </>
+      </LazyMotion>
     );
-  },
-);
+}
 
 StoryViewer.displayName = "StoryViewer";
 

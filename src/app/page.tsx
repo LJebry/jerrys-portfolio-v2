@@ -1,5 +1,12 @@
 import { FeaturedSpotlight } from "@/components/ui/feature-spotlight";
 import { SiteHeader } from "@/components/site-header";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Jerry Robayo | Full Stack Developer",
+  description:
+    "Portfolio home page for Jerry Robayo, a Brooklyn College computer science student and full stack developer.",
+};
 
 export default function Home() {
   return (
